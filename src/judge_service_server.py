@@ -12,7 +12,7 @@ class JudgeService(judge_service_pb2_grpc.JudgeService):
 
 async def serve() -> None:
     server = grpc.aio.server()
-    judge_service_pb2_grpc.add_GreeterServicer_to_server(JudgeService(), server)
+    judge_service_pb2_grpc.add_JudgeServiceServicer_to_server(JudgeService(), server)
     listen_addr = '[::]:50051'
     server.add_insecure_port(listen_addr)
     logging.info("Starting server on %s", listen_addr)
