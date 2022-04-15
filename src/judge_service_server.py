@@ -5,12 +5,13 @@ import judge_service_pb2_grpc
 import asyncio
 import logging
 
-import process
+from process import Process
 
 class JudgeService(judge_service_pb2_grpc.JudgeService):
     def GetFeature(self, request, context):
-        process.Process.run()
-        return judge_service_pb2.JudgeServiceRsp(result=request.id)
+        print(f"get request {request} from {context}")
+        res = int(Process().run(request.id))
+        return judge_service_pb2.JudgeServiceRsp(result=res)
 
 async def serve() -> None:
     server = grpc.aio.server()
