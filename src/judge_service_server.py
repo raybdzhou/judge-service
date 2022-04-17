@@ -10,7 +10,7 @@ from process import Process
 class JudgeService(judge_service_pb2_grpc.JudgeService):
     def GetFeature(self, request, context):
         print(f"get request {request} from {context}")
-        res = int(Process().run(request.id))
+        res = int(Process().run())
         return judge_service_pb2.JudgeServiceRsp(result=res)
 
 async def serve() -> None:
