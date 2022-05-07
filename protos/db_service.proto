@@ -1,0 +1,50 @@
+// db_service.proto
+syntax = "proto3";
+
+service DBService {
+    // Method definitions here
+    rpc GetAllData(DBServiceGetAllReq) returns (DBServiceGetAllRsp) {}
+    rpc GetSingleData(DBServiceGetSingleReq) returns (DBServiceGetSingleRsp) {}
+    rpc SetData(DBServiceSetReq) returns (DBServiceSetRsp) {}
+    rpc UpdateData(DBServiceUpdateReq) returns (DBServiceUpdateRsp) {} 
+}
+
+message Body {
+    int32 id = 1;
+    int32 access = 2;
+}
+
+message DBServiceGetAllReq {
+    int32 nid = 1;
+}
+
+message DBServiceGetAllRsp {
+    repeated Body results = 1;
+}
+
+message DBServiceGetSingleReq {
+    int32 nid = 1;
+    int32 id = 2;
+}
+
+message DBServiceGetSingleRsp {
+    Body result = 1;
+}
+
+message DBServiceSetReq {
+    int32 nid = 1;
+    Body data = 2;
+}
+
+message DBServiceSetRsp {
+    int32 op_stutas = 1;
+}
+
+message DBServiceUpdateReq {
+    int32 nid = 1;
+    Body data = 2;
+}
+
+message DBServiceUpdateRsp {
+    int32 op_stutas = 1;
+}

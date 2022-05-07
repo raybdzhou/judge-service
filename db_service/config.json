@@ -1,0 +1,9 @@
+{
+    "db_config": {
+        "host": "localhost",
+        "user": "judgeuser",
+        "passwd": "Judgeuser123@",
+        "database": "judge123",
+        "table": "judge_table"
+    }
+}

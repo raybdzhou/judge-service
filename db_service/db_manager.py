@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import pymysql
+import json
 @dataclass
 class DatabaseInstance:
     host: str
@@ -7,13 +8,16 @@ class DatabaseInstance:
     passwd: str
     database: str
     table: str
+with open('config.json', 'r') as jsonfile:
+    json_str = json.load(jsonfile)
 
+db_config = json_str["db_config"]
 db_instance = DatabaseInstance(
-    'localhost',
-   'judgeuser',
-   'Judgeuser123@',
-   'judge123',
-   'judge_table'
+    db_config["host"],
+    db_config["user"],
+    db_config["passwd"],
+    db_config["database"],
+    db_config["table"]
 )
 @dataclass
 class DBManager:
@@ -24,15 +28,10 @@ class DBManager:
         database = db_instance.database)
     
     def get_rows(self, key = None):
-        rows = []
-        results = self.get_row_default(5, id = key)
-        for result in results:
-            rows.append(result[1])
-        return rows.pop()
-    
-    
+        return self.get_row_default(id = key)
+
     # DO NOT EDIT!
-    def get_row_default(self, rows, **kwargs):
+    def get_row_default(self, **kwargs):
         """
         rows: number of data to be queried
         **kwargs: conditions
@@ -43,13 +42,26 @@ class DBManager:
             if v is not None:
                 conds.append(f"{k}={v}")
         sql_cond = f" WHERE {' and '.join(conds)}" if len(conds) > 0 else ""
-        sql = f"SELECT * FROM {db_instance.table}{sql_cond} ORDER BY RAND() LIMIT {rows};"
+        sql = f"SELECT * FROM {db_instance.table}{sql_cond};"
         try:
             cursor = self.db.cursor()
             cursor.execute(sql)
             return cursor.fetchall()
         except Exception as e:
             raise e
+    
+    def set_row(self, _id = None, _access = None, new_flag = True):
+        if _id is None:
+            print("ID is not allowed to be None.")
+            raise
+        if _access is None:
+            print("ACCESS is not allowed to be None.")
+            raise
+        if new_flag:
+            self.set_row_default(id = _id, access = _access)
+        else:
+            self.update_row_default(id = _id, access = _access)
+
     
     def set_row_default(self, **kwargs):
         """
