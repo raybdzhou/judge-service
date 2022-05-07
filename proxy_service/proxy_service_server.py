@@ -15,11 +15,11 @@ for n in node_map_list:
 @app.route('/')
 def proxy():
     req = judge.run()
-    return req.text
+    return req
 
 if __name__== "__main__":
     # 采用一致表决
     # judge = Judge(node_map, True)
     # 采用多模表决
     judge = Judge(node_map)
-    app.run(host='0.0.0.0',port=8080)
+    app.run(host='0.0.0.0',port=5050)

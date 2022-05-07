@@ -9,7 +9,7 @@ from process import Process
 
 class DBService(db_service_pb2_grpc.DBService):
     def GetAllData(self, request, context):
-        print(f"[GetAllData]: get request {request} from {context}")
+        print(f"[GetAllData]: get request {request.nid} from {context}")
         _results = Process().get_all_data()
         return db_service_pb2.DBServiceGetAllRsp(results=_results)
     
