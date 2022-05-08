@@ -1,4 +1,3 @@
-import requests
 from flask import Flask
 from judge import Judge
 import json
