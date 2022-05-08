@@ -23,6 +23,7 @@ class Judge:
         self.node_selected_map = {}
         self.node_output_map = {}
         self.current_output_map = {}
+        self.output_req_map = {}
         self.F = {}
         self.S = {}
     
@@ -34,26 +35,35 @@ class Judge:
         return pk
 
     def run(self, unanimous=False):
+        header_server = ''
         nodes_counts = len(self.nodes)
         selected_nodes = random.sample(range(0, nodes_counts), choice_amount)
         for i in selected_nodes:
             self.req_count += 1
             self.node_selected_map[i] = self.node_selected_map[i] + 1 if i in self.node_selected_map else 1
             self.node_output_map[i] = self.node_output_map[i] if i in self.node_output_map else 0
-            res = requests.get(self.nodes[i]).text
+            req = requests.get(self.nodes[i])
+            res = req.text
             self.res_map[res] = self.res_map[res] + 1 if res in self.res_map else 1
             self.current_output_map[i] = res
+            self.output_req_map[i] = req
         
         self.S = {k: v/self.req_count for k, v in self.res_map.items()}
         self.F = {k: self.calculate_pk()/v for k, v in self.res_map.items()}
 
         if unanimous:
             judge_list = []
+            node_list = []
             s_list = [(k, v) for k, v in self.S.items()].sort(key=lambda x: x[1], reverse=True)
             for s in s_list:
                 if s[1] == s_list[0][1]:
                     judge_list.append(s[0])
-            return random.choice(judge_list)
+            res = random.choice(judge_list)
+            for k, v in self.current_output_map.items():
+                if v == res:
+                    node_list.append(k)
+            header_server = self.output_req_map[random.choice(node_list)].headers['server']
+            return res, header_server
         else:
             judge_list = []
             for k in self.res_map:
@@ -63,5 +73,7 @@ class Judge:
             for i in self.current_output_map:
                 if self.current_output_map[i] == judge_list[0][1]:
                     self.node_output_map[i] += 1
+                    header_server = self.output_req_map[i].headers['server']
             self.current_output_map = {}
-            return judge_list[0][1]
+            self.output_req_map = {}
+            return judge_list[0][1], header_server

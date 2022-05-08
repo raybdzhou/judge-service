@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, make_response
 from judge import Judge
 import json
 
@@ -13,8 +13,10 @@ for n in node_map_list:
 
 @app.route('/')
 def proxy():
-    req = judge.run()
-    return req
+    res, headers_server = judge.run()
+    rsp = make_response(res)
+    rsp.headers["Server"] = headers_server
+    return rsp
 
 if __name__== "__main__":
     # 采用一致表决
