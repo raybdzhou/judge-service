@@ -27,10 +27,17 @@ class Judge:
         self.F = {}
         self.S = {}
     
-    def calculate_pk(self):
+    def calculate_pk(self, key):
+        key = f"{key}"
+        key_index = -1
+        key_list = []
+        for n in self.current_output_map.values():
+            key_index += 1
+            if n == key:
+                key_list.append(list(self.current_output_map.keys())[key_index])
         pk = 0
-        for k in self.node_selected_map:
-            ak = self.node_output_map[k] if k in self.node_output_map else 0
+        for k in key_list:
+            ak = self.node_output_map[k]
             pk += ak / self.node_selected_map[k]
         return pk
 
@@ -49,7 +56,7 @@ class Judge:
             self.output_req_map[i] = req
         
         self.S = {k: v/self.req_count for k, v in self.res_map.items()}
-        self.F = {k: self.calculate_pk()/v for k, v in self.res_map.items()}
+        self.F = {k: self.calculate_pk(k)/v for k, v in self.res_map.items()}
 
         if unanimous:
             judge_list = []
@@ -64,6 +71,12 @@ class Judge:
                 if v == res:
                     node_list.append(k)
             header_server = self.output_req_map[random.choice(node_list)].headers['server']
+            self.res_map = {}
+            self.current_output_map = {}
+            self.output_req_map = {}
+            self.req_count = 0
+            self.F = {}
+            self.S = {}
             return res, header_server
         else:
             judge_list = []
@@ -75,6 +88,10 @@ class Judge:
                 if self.current_output_map[i] == judge_list[0][1]:
                     self.node_output_map[i] += 1
                     header_server = self.output_req_map[i].headers['server']
+            self.res_map = {}
             self.current_output_map = {}
             self.output_req_map = {}
+            self.req_count = 0
+            self.F = {}
+            self.S = {}
             return judge_list[0][1], header_server
