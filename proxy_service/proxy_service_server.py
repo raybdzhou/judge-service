@@ -13,14 +13,12 @@ for n in node_map_list:
 
 @app.route('/')
 def proxy():
+    # res, headers_server = judge.run()
     res, headers_server = judge.run()
     rsp = make_response(res)
     rsp.headers["Server"] = headers_server
     return rsp
 
 if __name__== "__main__":
-    # 采用一致表决
-    # judge = Judge(node_map, True)
-    # 采用多模表决
     judge = Judge(node_map)
     app.run(host='0.0.0.0',port=5050)

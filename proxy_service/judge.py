@@ -54,7 +54,8 @@ class Judge:
         if unanimous:
             judge_list = []
             node_list = []
-            s_list = [(k, v) for k, v in self.S.items()].sort(key=lambda x: x[1], reverse=True)
+            s_list = [(k, v) for k, v in self.S.items()]
+            s_list.sort(key=lambda x: x[1], reverse=True)
             for s in s_list:
                 if s[1] == s_list[0][1]:
                     judge_list.append(s[0])

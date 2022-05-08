@@ -1,5 +1,5 @@
 {
-    "nid": 0,
+    "nid": 1,
     "data_count": 5,
     "percentages": [0.7, 0.12, 0.02, 0.04, 0.12],
     "rpc_dst": "localhost:50051"
